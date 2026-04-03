@@ -20,7 +20,7 @@ export const productImageMap: Record<string, string> = {
   "4": speakersImg,
   "5": microphonesImg,
   "6": projectorImg,
-  "7": chairsImg, // fallback for linens
+  "7": linensImg,
   "8": dinnerwareImg,
   "9": cakestandImg,
   "10": backdropImg,
