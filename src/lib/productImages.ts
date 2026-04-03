@@ -1,5 +1,6 @@
 import chairsImg from "@/assets/product-chairs.jpg";
 import tablesImg from "@/assets/product-tables.jpg";
+import linensImg from "@/assets/product-linens.jpg";
 import tentsImg from "@/assets/product-tents.jpg";
 import speakersImg from "@/assets/product-speakers.jpg";
 import microphonesImg from "@/assets/product-microphones.jpg";
