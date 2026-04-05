@@ -28,17 +28,17 @@ export default function ProductCard({ product, index, onClick }: ProductCardProp
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-base font-semibold text-foreground leading-snug">{product.name}</h3>
+      <div className="p-3 sm:p-4 md:p-5">
+        <div className="flex items-start justify-between gap-2 mb-1.5 sm:mb-2">
+          <h3 className="text-sm sm:text-base font-semibold text-foreground leading-snug">{product.name}</h3>
           {!product.available && (
-            <Badge variant="secondary" className="text-xs shrink-0">Unavailable</Badge>
+            <Badge variant="secondary" className="text-[10px] sm:text-xs shrink-0">Unavailable</Badge>
           )}
         </div>
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2 sm:mb-3">{product.description}</p>
         <div className="flex items-baseline gap-1">
-          <span className="text-lg font-bold text-foreground">${product.price}</span>
-          <span className="text-xs text-muted-foreground">/ {product.priceUnit}</span>
+          <span className="text-base sm:text-lg font-bold text-foreground">${product.price}</span>
+          <span className="text-[10px] sm:text-xs text-muted-foreground">/ {product.priceUnit}</span>
         </div>
       </div>
     </motion.div>
