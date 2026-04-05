@@ -85,21 +85,21 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="flex items-center justify-center pt-32 px-6">
+        <div className="flex items-center justify-center pt-24 sm:pt-32 px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             className="w-full max-w-sm"
           >
-            <div className="bg-card rounded-3xl p-8 border border-border" style={{ boxShadow: "var(--shadow-lg)" }}>
-              <div className="flex justify-center mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center">
-                  <Lock className="w-6 h-6 text-foreground" />
+            <div className="bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-border" style={{ boxShadow: "var(--shadow-lg)" }}>
+              <div className="flex justify-center mb-4 sm:mb-6">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-secondary flex items-center justify-center">
+                  <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
                 </div>
               </div>
-              <h2 className="text-xl font-bold text-foreground text-center mb-1">Admin Access</h2>
-              <p className="text-sm text-muted-foreground text-center mb-6">Enter password to continue</p>
-              <form onSubmit={handleLogin} className="space-y-4">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground text-center mb-1">Admin Access</h2>
+              <p className="text-xs sm:text-sm text-muted-foreground text-center mb-4 sm:mb-6">Enter password to continue</p>
+              <form onSubmit={handleLogin} className="space-y-3 sm:space-y-4">
                 <Input
                   type="password"
                   placeholder="Password"
@@ -111,7 +111,7 @@ export default function AdminPage() {
                   Sign In
                 </Button>
               </form>
-              <p className="text-xs text-muted-foreground text-center mt-4">Demo password: admin123</p>
+              <p className="text-xs text-muted-foreground text-center mt-3 sm:mt-4">Demo password: admin123</p>
             </div>
           </motion.div>
         </div>
@@ -122,50 +122,84 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="pt-24 pb-16 max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-8">
+      <main className="pt-20 sm:pt-24 pb-12 sm:pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Product Management</h1>
-            <p className="text-sm text-muted-foreground mt-1">{products.length} products total</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Product Management</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{products.length} products total</p>
           </div>
-          <Button onClick={openAdd} className="rounded-xl gap-2 bg-foreground text-background hover:bg-foreground/90">
+          <Button onClick={openAdd} className="rounded-xl gap-2 bg-foreground text-background hover:bg-foreground/90 w-full sm:w-auto">
             <Plus className="w-4 h-4" /> Add Product
           </Button>
         </div>
 
-        <div className="bg-card rounded-2xl border border-border overflow-hidden" style={{ boxShadow: "var(--shadow-sm)" }}>
+        {/* Mobile card view */}
+        <div className="block sm:hidden space-y-3">
+          {products.map((p) => (
+            <div key={p.id} className="bg-card rounded-xl border border-border p-3" style={{ boxShadow: "var(--shadow-sm)" }}>
+              <div className="flex items-center gap-3">
+                <img
+                  src={getProductImage(p.id, p.image)}
+                  alt={p.name}
+                  className="w-12 h-12 rounded-lg object-cover shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{p.name}</p>
+                  <p className="text-xs text-muted-foreground">{p.category}</p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-sm font-bold text-foreground">${p.price}</p>
+                  <span className={`text-[10px] font-medium ${p.available ? "text-success" : "text-destructive"}`}>
+                    {p.available ? "Available" : "Unavailable"}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-1 mt-2 pt-2 border-t border-border">
+                <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg hover:bg-destructive/10 transition-colors text-muted-foreground hover:text-destructive">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table view */}
+        <div className="hidden sm:block bg-card rounded-2xl border border-border overflow-hidden" style={{ boxShadow: "var(--shadow-sm)" }}>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-secondary/50">
-                  <th className="text-left p-4 font-medium text-muted-foreground">Product</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground hidden md:table-cell">Category</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Price</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground hidden sm:table-cell">Status</th>
-                  <th className="text-right p-4 font-medium text-muted-foreground">Actions</th>
+                  <th className="text-left p-3 md:p-4 font-medium text-muted-foreground">Product</th>
+                  <th className="text-left p-3 md:p-4 font-medium text-muted-foreground hidden md:table-cell">Category</th>
+                  <th className="text-left p-3 md:p-4 font-medium text-muted-foreground">Price</th>
+                  <th className="text-left p-3 md:p-4 font-medium text-muted-foreground hidden lg:table-cell">Status</th>
+                  <th className="text-right p-3 md:p-4 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((p) => (
                   <tr key={p.id} className="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
-                    <td className="p-4">
+                    <td className="p-3 md:p-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={getProductImage(p.id, p.image)}
                           alt={p.name}
-                          className="w-10 h-10 rounded-lg object-cover"
+                          className="w-8 h-8 md:w-10 md:h-10 rounded-lg object-cover"
                         />
-                        <span className="font-medium text-foreground">{p.name}</span>
+                        <span className="font-medium text-foreground text-xs md:text-sm">{p.name}</span>
                       </div>
                     </td>
-                    <td className="p-4 text-muted-foreground hidden md:table-cell">{p.category}</td>
-                    <td className="p-4 font-medium text-foreground">${p.price}</td>
-                    <td className="p-4 hidden sm:table-cell">
+                    <td className="p-3 md:p-4 text-muted-foreground hidden md:table-cell">{p.category}</td>
+                    <td className="p-3 md:p-4 font-medium text-foreground">${p.price}</td>
+                    <td className="p-3 md:p-4 hidden lg:table-cell">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full ${p.available ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>
                         {p.available ? "Available" : "Unavailable"}
                       </span>
                     </td>
-                    <td className="p-4 text-right">
+                    <td className="p-3 md:p-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground">
                           <Pencil className="w-4 h-4" />
@@ -184,11 +218,11 @@ export default function AdminPage() {
       </main>
 
       <Dialog open={showForm} onOpenChange={(open) => { if (!open) { setShowForm(false); resetForm(); } }}>
-        <DialogContent className="max-w-lg rounded-3xl">
+        <DialogContent className="max-w-[95vw] sm:max-w-lg rounded-2xl sm:rounded-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editProduct ? "Edit Product" : "Add Product"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 mt-2">
+          <div className="space-y-3 sm:space-y-4 mt-2">
             <div>
               <Label className="text-xs text-muted-foreground mb-1.5 block">Name</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-xl" />
@@ -208,7 +242,7 @@ export default function AdminPage() {
               <Label className="text-xs text-muted-foreground mb-1.5 block">Description</Label>
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="rounded-xl" rows={3} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <Label className="text-xs text-muted-foreground mb-1.5 block">Price ($)</Label>
                 <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} className="rounded-xl" />

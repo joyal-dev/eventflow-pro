@@ -25,9 +25,9 @@ export default function Index() {
       <HeroSection />
 
       {/* Features */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="py-12 sm:py-16 md:py-20 bg-secondary/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -37,11 +37,11 @@ export default function Index() {
                 transition={{ delay: i * 0.1 }}
                 className="text-center"
               >
-                <div className="w-12 h-12 rounded-2xl bg-foreground/5 flex items-center justify-center mx-auto mb-4">
-                  <f.icon className="w-5 h-5 text-foreground" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-foreground/5 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <f.icon className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
                 </div>
-                <h3 className="text-base font-semibold text-foreground mb-1">{f.title}</h3>
-                <p className="text-sm text-muted-foreground">{f.desc}</p>
+                <h3 className="text-sm sm:text-base font-semibold text-foreground mb-1">{f.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -49,23 +49,23 @@ export default function Index() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-10">
+      <section className="py-12 sm:py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-6 sm:mb-8 md:mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground">Featured Rentals</h2>
-              <p className="text-muted-foreground mt-1">Our most popular event essentials.</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">Featured Rentals</h2>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1">Our most popular event essentials.</p>
             </div>
             <Link to="/products" className="hidden md:flex items-center gap-1 text-sm font-medium text-foreground hover:text-brand transition-colors">
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {featured.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} onClick={() => setSelected(product)} />
             ))}
           </div>
-          <div className="mt-8 text-center md:hidden">
+          <div className="mt-6 sm:mt-8 text-center md:hidden">
             <Link to="/products" className="text-sm font-medium text-foreground">
               View all products →
             </Link>

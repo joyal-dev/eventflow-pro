@@ -16,36 +16,36 @@ export default function ProductDetailModal({ product, open, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-3xl">
-        <div className="aspect-video overflow-hidden bg-secondary">
+      <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl p-0 overflow-hidden rounded-2xl sm:rounded-3xl max-h-[90vh] overflow-y-auto">
+        <div className="aspect-[4/3] sm:aspect-video overflow-hidden bg-secondary">
           <img
             src={getProductImage(product.id, product.image)}
             alt={product.name}
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">{product.name}</DialogTitle>
+            <DialogTitle className="text-xl sm:text-2xl font-bold">{product.name}</DialogTitle>
           </DialogHeader>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">{product.category}</Badge>
+            <Badge variant="outline" className="text-[10px] sm:text-xs">{product.category}</Badge>
             {product.available ? (
-              <span className="flex items-center gap-1 text-xs text-success font-medium">
-                <CheckCircle className="w-3.5 h-3.5" /> Available
+              <span className="flex items-center gap-1 text-[10px] sm:text-xs text-success font-medium">
+                <CheckCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Available
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-xs text-destructive font-medium">
-                <XCircle className="w-3.5 h-3.5" /> Unavailable
+              <span className="flex items-center gap-1 text-[10px] sm:text-xs text-destructive font-medium">
+                <XCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Unavailable
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground leading-relaxed">{product.description}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{product.description}</p>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-3xl font-bold text-foreground">${product.price}</span>
-            <span className="text-sm text-muted-foreground">/ {product.priceUnit}</span>
+            <span className="text-2xl sm:text-3xl font-bold text-foreground">${product.price}</span>
+            <span className="text-xs sm:text-sm text-muted-foreground">/ {product.priceUnit}</span>
           </div>
-          <Button size="lg" className="w-full rounded-2xl gap-2 bg-foreground text-background hover:bg-foreground/90">
+          <Button size="lg" className="w-full rounded-xl sm:rounded-2xl gap-2 bg-foreground text-background hover:bg-foreground/90 text-sm sm:text-base">
             <Mail className="w-4 h-4" />
             Inquire to Rent
           </Button>
