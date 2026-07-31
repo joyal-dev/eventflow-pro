@@ -475,6 +475,16 @@ function handleDocumentClick(event) {
     return;
   }
 
+  const adminImageRemove = target.closest("[data-admin-image-remove]");
+  if (adminImageRemove) {
+    state.adminForm = {
+      ...state.adminForm,
+      image: "",
+    };
+    renderApp();
+    return;
+  }
+
   const adminModalClose = target.closest("[data-admin-modal-close]");
   if (adminModalClose || target.matches(".modal.is-open[data-admin-dialog]")) {
     state.adminFormOpen = false;
@@ -504,7 +514,37 @@ function handleDocumentInput(event) {
       ...state.adminForm,
       [field]: target.type === "checkbox" ? target.checked : target.value,
     };
+    return;
   }
+
+  if (target.matches("[data-admin-image-input]")) {
+    const file = target.files && target.files[0];
+    if (!file) {
+      return;
+    }
+
+    readFileAsDataUrl(file)
+      .then((dataUrl) => {
+        state.adminForm = {
+          ...state.adminForm,
+          image: dataUrl,
+        };
+        renderApp();
+      })
+      .catch((error) => {
+        console.error("Failed to read selected image", error);
+        showToast("Could not load that image", "error");
+      });
+  }
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
 }
 
 function handleDocumentSubmit(event) {
@@ -724,8 +764,23 @@ function getAdminModal() {
               </label>
             </div>
             <label>
-              <span>Image URL (optional)</span>
-              <input type="text" data-admin-field="image" value="${escapeHtml(state.adminForm.image)}" placeholder="https://...">
+              <span>Product Image (optional)</span>
+              <div class="admin-image-picker">
+                ${
+                  state.adminForm.image
+                    ? `
+                      <div class="admin-image-preview">
+                        <img src="${escapeHtml(state.adminForm.image)}" alt="Selected product image">
+                        <button type="button" class="admin-image-remove" data-admin-image-remove aria-label="Remove image">Remove</button>
+                      </div>
+                    `
+                    : ""
+                }
+                <label class="admin-image-upload-button">
+                  <span>${state.adminForm.image ? "Change image" : "Choose from gallery"}</span>
+                  <input type="file" accept="image/*" data-admin-image-input hidden>
+                </label>
+              </div>
             </label>
             <label class="toggle-row">
               <input type="checkbox" data-admin-field="available" ${state.adminForm.available ? "checked" : ""}>

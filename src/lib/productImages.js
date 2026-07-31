@@ -30,9 +30,47 @@ export const productImageMap = {
   "14": lightsImg,
 };
 
-export function getProductImage(id, customImage) {
-  if (customImage && customImage.length > 0) {
-    return customImage;
+/**
+ * Resolves a product image, preferring an image picked from the device gallery
+ * (e.g. Capacitor Camera/Photos, Expo ImagePicker, or a raw <input type="file">)
+ * over the default catalog image.
+ *
+ * `galleryImage` can be:
+ *  - a string (URL or base64 data URI) — used as-is
+ *  - an object with a `uri`, `path`, or `webPath` property — common shapes
+ *    returned by native gallery pickers
+ *  - a File/Blob — converted to an object URL for display
+ *
+ * @param {string} id - product id, used to fall back to the catalog image
+ * @param {string|File|Blob|{uri?:string,path?:string,webPath?:string}} galleryImage
+ */
+export function getProductImage(id, galleryImage) {
+  const resolved = resolveGalleryImage(galleryImage);
+  if (resolved) {
+    return resolved;
   }
   return productImageMap[id] || chairsImg;
+}
+
+function resolveGalleryImage(galleryImage) {
+  if (!galleryImage) {
+    return null;
+  }
+
+  // Plain URL or base64 data URI
+  if (typeof galleryImage === "string") {
+    return galleryImage.length > 0 ? galleryImage : null;
+  }
+
+  // File/Blob selected directly from the device (e.g. <input type="file">)
+  if (typeof Blob !== "undefined" && galleryImage instanceof Blob) {
+    return URL.createObjectURL(galleryImage);
+  }
+
+  // Object shapes returned by native gallery pickers
+  if (typeof galleryImage === "object") {
+    return galleryImage.webPath || galleryImage.uri || galleryImage.path || null;
+  }
+
+  return null;
 }
