@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { getProducts, addProduct, updateProduct, deleteProduct, categories } from "@/lib/products";
 import { getProductImage } from "@/lib/productImages";
