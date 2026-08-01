@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Pencil, Trash2, Plus, Lock, Image, Film, Upload, X } from "lucide-react";
+import { Pencil, Trash2, Plus, Lock, Image, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -68,6 +68,7 @@ export default function AdminPage() {
         price: 0,
         priceUnit: "per unit / day",
         image: "",
+        galleryImages: [],
         video: "",
         available: true,
     });
@@ -89,7 +90,7 @@ export default function AdminPage() {
     };
 
     const resetForm = () => {
-        setForm({ name: "", category: "Furniture", description: "", price: 0, priceUnit: "per unit / day", image: "", video: "", available: true });
+        setForm({ name: "", category: "Furniture", description: "", price: 0, priceUnit: "per unit / day", image: "", galleryImages: [], video: "", available: true });
         setEditProduct(null);
     };
 
@@ -100,7 +101,7 @@ export default function AdminPage() {
 
     const openEdit = (p) => {
         setEditProduct(p);
-        setForm({ name: p.name, category: p.category, description: p.description, price: p.price, priceUnit: p.priceUnit, image: p.image, video: p.video || "", available: p.available });
+        setForm({ name: p.name, category: p.category, description: p.description, price: p.price, priceUnit: p.priceUnit, image: p.image, galleryImages: Array.isArray(p.galleryImages) ? p.galleryImages : [], video: p.video || "", available: p.available });
         setShowForm(true);
     };
 
@@ -143,20 +144,19 @@ export default function AdminPage() {
         }
     };
 
-    const handleVideoUpload = (e) => {
-        const file = e.target.files?.[0];
-        if (!file)
+    const handleGalleryImagesUpload = async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (!files.length)
             return;
-        if (file.size > 2.5 * 1024 * 1024) {
-            toast.error("Video exceeds 2.5MB. Please choose a smaller video.");
-            return;
+        try {
+            const compressedImages = await Promise.all(files.map((file) => compressImage(file)));
+            setForm((prev) => ({ ...prev, galleryImages: [...(prev.galleryImages || []), ...compressedImages] }));
+            toast.success("Gallery images added");
         }
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            setForm((prev) => ({ ...prev, video: event.target.result }));
-            toast.success("Video added");
-        };
-        reader.readAsDataURL(file);
+        catch (err) {
+            console.error(err);
+            toast.error("Failed to process gallery images");
+        }
     };
 
     if (!authenticated) {
@@ -193,25 +193,14 @@ export default function AdminPage() {
                     )
                 ] }),
                 _jsxs("div", { className: "space-y-1.5", children: [
-                    _jsx(Label, { className: "text-xs text-muted-foreground block", children: "Product Video (optional)" }),
-                    form.video ? (
-                        _jsxs("div", { className: "relative aspect-video rounded-xl overflow-hidden border border-border bg-secondary flex items-center justify-center", children: [
-                            _jsx("video", { src: form.video, className: "w-full h-full object-cover", muted: true, playsInline: true, loop: true, autoPlay: true }),
-                            _jsxs("div", { className: "absolute bottom-1 right-1 flex gap-1", children: [
-                                _jsxs("label", { className: "p-1 rounded bg-background/80 hover:bg-background text-[10px] text-muted-foreground hover:text-foreground cursor-pointer border border-border transition-colors flex items-center justify-center", children: [
-                                    _jsx(Upload, { className: "w-3 h-3" }),
-                                    _jsx("input", { type: "file", accept: "video/*", onChange: handleVideoUpload, className: "hidden" })
-                                ] }),
-                                _jsx("button", { type: "button", onClick: () => setForm((prev) => ({ ...prev, video: "" })), className: "p-1 rounded bg-background/80 hover:bg-background text-muted-foreground hover:text-destructive border border-border transition-colors", children: _jsx(X, { className: "w-3 h-3" }) })
-                            ] })
+                    _jsx(Label, { className: "text-xs text-muted-foreground block", children: "Gallery Images" }),
+                    form.galleryImages && form.galleryImages.length > 0 ? (
+                        _jsxs("div", { className: "space-y-2", children: [
+                            _jsx("div", { className: "grid grid-cols-2 gap-2", children: form.galleryImages.map((src, index) => (_jsxs("div", { className: "relative aspect-square overflow-hidden rounded-xl border border-border bg-secondary", children: [_jsx("img", { src: src, alt: `Gallery ${index + 1}`, className: "h-full w-full object-cover" }), _jsx("button", { type: "button", onClick: () => setForm((prev) => ({ ...prev, galleryImages: prev.galleryImages.filter((_, itemIndex) => itemIndex !== index) })), className: "absolute right-1 top-1 rounded-full bg-background/80 p-1 text-muted-foreground transition hover:text-destructive", children: _jsx(X, { className: "h-3 w-3" }) })] }, index))) }),
+                            _jsxs("label", { className: "flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-muted-foreground/30 bg-secondary/30 p-3 text-center transition hover:border-foreground/50 hover:bg-secondary/50", children: [_jsx(Upload, { className: "h-4 w-4 text-muted-foreground" }), _jsx("span", { className: "text-[10px] font-medium text-muted-foreground", children: "Add more images from gallery" }), _jsx("input", { type: "file", accept: "image/*", multiple: true, onChange: handleGalleryImagesUpload, className: "hidden" })] })
                         ] })
                     ) : (
-                        _jsxs("label", { className: "flex flex-col items-center justify-center aspect-video rounded-xl border border-dashed border-muted-foreground/30 hover:border-foreground/50 bg-secondary/30 hover:bg-secondary/50 cursor-pointer transition-all p-3 text-center", children: [
-                            _jsx(Film, { className: "w-5 h-5 text-muted-foreground mb-1" }),
-                            _jsx("span", { className: "text-[10px] font-medium text-muted-foreground", children: "Upload Video" }),
-                            _jsx("span", { className: "text-[8px] text-muted-foreground/75 mt-0.5", children: "Max 2.5MB" }),
-                            _jsx("input", { type: "file", accept: "video/*", onChange: handleVideoUpload, className: "hidden" })
-                        ] })
+                        _jsxs("label", { className: "flex flex-col items-center justify-center aspect-video rounded-xl border border-dashed border-muted-foreground/30 bg-secondary/30 p-3 text-center transition hover:border-foreground/50 hover:bg-secondary/50 cursor-pointer", children: [_jsx(Image, { className: "mb-1 h-5 w-5 text-muted-foreground" }), _jsx("span", { className: "text-[10px] font-medium text-muted-foreground", children: "Upload images from mobile gallery" }), _jsx("span", { className: "mt-0.5 text-[8px] text-muted-foreground/75", children: "Select one or more photos" }), _jsx("input", { type: "file", accept: "image/*", multiple: true, onChange: handleGalleryImagesUpload, className: "hidden" })] })
                     )
                 ] })
             ] }),
