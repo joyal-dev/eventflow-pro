@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { getProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import CategoryFilter from "@/components/CategoryFilter";
-import ProductDetailModal from "@/components/ProductDetailModal";
+import ProductDetailModal from "@/components/ProductDetailModal.jsx";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Search } from "lucide-react";

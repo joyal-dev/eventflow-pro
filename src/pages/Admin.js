@@ -136,7 +136,16 @@ export default function AdminPage() {
             return;
         try {
             const compressed = await compressImage(file);
-            setForm((prev) => ({ ...prev, image: compressed }));
+            setForm((prev) => {
+                if (prev.image) {
+                    return {
+                        ...prev,
+                        galleryImages: [...(prev.galleryImages || []), prev.image],
+                        image: compressed,
+                    };
+                }
+                return { ...prev, image: compressed };
+            });
             toast.success("Photo added");
         }
         catch (err) {

@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
 import ProductCard from "@/components/ProductCard";
-import ProductDetailModal from "@/components/ProductDetailModal";
+import ProductDetailModal from "@/components/ProductDetailModal.jsx";
 import { getProducts } from "@/lib/products";
 import { ArrowRight, Sparkles, Truck, HeadphonesIcon } from "lucide-react";
 import { motion } from "framer-motion";
